@@ -1,0 +1,114 @@
+openapi: 3.0.1
+
+info:
+  title: RCA Lambda Agent API
+  description: API for analyzing AWS Lambda logs using Amazon Bedrock.
+  version: 1.0.0
+  x-agent-name: root-cause-analysis-agent
+  x-action-group: RCA_agentLambda
+
+paths:
+
+  /analyzeLambdaError:
+
+    post:
+
+      summary: Analyze Lambda Error Logs
+
+      description: >
+        Fetches CloudWatch logs for a Lambda function,
+        analyzes errors using Amazon Bedrock Claude,
+        and returns root cause and fix recommendation.
+
+      operationId: analyzeLambdaError
+
+      x-lambda-function: RCAlambdaFx
+
+      requestBody:
+
+        required: true
+
+        content:
+
+          application/json:
+
+            schema:
+
+              type: object
+
+              properties:
+
+                function_name:
+
+                  type: string
+
+                  description: Lambda function name
+
+                  example: errorThrowingLambdaFx
+
+              required:
+                - function_name
+
+      responses:
+
+        "200":
+
+          description: RCA analysis completed successfully
+
+          content:
+
+            application/json:
+
+              schema:
+
+                type: object
+
+                properties:
+
+                  functionAnalyzed:
+
+                    type: string
+
+                  rootCause:
+
+                    type: string
+
+                  recommendation:
+
+                    type: string
+
+        "400":
+
+          description: Invalid Request
+
+          content:
+
+            application/json:
+
+              schema:
+
+                type: object
+
+                properties:
+
+                  error:
+
+                    type: string
+
+        "500":
+
+          description: Internal Server Error
+
+          content:
+
+            application/json:
+
+              schema:
+
+                type: object
+
+                properties:
+
+                  error:
+
+                    type: string
